@@ -3,7 +3,7 @@ from flask_migrate import Migrate
 from flask_restful import Api
 from models import db
 from flask_cors import CORS
-from resources.airplanes import PlaneCompanyResourceList, PlaneCompanyResource
+from resources.airplanes import CompanyList,Company,Airplanes
 
 app =Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///airplanes.db'
@@ -18,8 +18,10 @@ api = Api(app)
 def home():
     return '<h1>Welcome to the airplane web page!</h1>'
     
-api.add_resource(PlaneCompanyResource, '/company')
-api.add_resource(PlaneCompanyResourceList, '/company/<int:id>')
+api.add_resource(CompanyList, '/company')
+api.add_resource(Company, '/company/<int:id>')
+
+api.add_resource(Airplanes, '/planes')
 
 if __name__ == '__main__':
     app.run(debug=True)
