@@ -29,11 +29,10 @@ class Planes(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String, nullable = False, unique = True)
 
-class PlaneCompany(db.Model, SerializerMixin):
-    __tablename__ = 'plane_company'
+class Owners(db.Model, SerializerMixin):
+    __tablename__ = 'owners'
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String, nullable = False, unique = True)
-    founded = db.Column(db.String, nullable = False)
 
 if __name__ == '__main__':
     app.run(debug=True)
