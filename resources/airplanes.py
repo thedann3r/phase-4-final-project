@@ -1,6 +1,6 @@
 from flask_restful import Resource
 from flask import request
-from app import PlaneCompany, Planes,PlanesOwners,Owners,db
+from models import PlaneCompany, Planes,PlanesOwners,Owners,db
 
 class PlaneCompanyResource(Resource):
     def get(self):
@@ -23,21 +23,22 @@ class PlaneCompanyResourceList(Resource):
         if not company:
             return {'error' : 'Company was not found!'}, 404
         return company.to_dict(), 200
-    def patch(self, id):
-        data = request.get_json()
-        company = PlaneCompany.filter_by(id=id).first()
-        if not company:
-            return {'error' : 'Company not found!'}, 404
-        if 'name' in data:
-            company.name = data['name']
-        if 'founded' in data:
-            company.founded = data['founded']
-        db.session.commt()
-        return company.to_dict(), 200
-    def delete(self, id):
-        company = PlaneCompany.query.get(id)
-        if not company:
-            return {'error' : 'Company not found!'}, 404
-        db.session.delete(company)
-        db.session.commit()
-        return {'message' : 'company deleted successfully!'}, 200
+    
+    # def patch(self, id):
+    #     data = request.get_json()
+    #     company = PlaneCompany.filter_by(id=id).first()
+    #     if not company:
+    #         return {'error' : 'Company not found!'}, 404
+    #     if 'name' in data:
+    #         company.name = data['name']
+    #     if 'founded' in data:
+    #         company.founded = data['founded']
+    #     db.session.commt()
+    #     return company.to_dict(), 200
+    # def delete(self, id):
+    #     company = PlaneCompany.query.get(id)
+    #     if not company:
+    #         return {'error' : 'Company not found!'}, 404
+    #     db.session.delete(company)
+    #     db.session.commit()
+    #     return {'message' : 'company deleted successfully!'}, 200
