@@ -14,10 +14,6 @@ migrate = Migrate(app,db)
 CORS(app, supports_credentials=True)
 api = Api(app)
 
-@app.route('/')
-def home():
-    return '<h1>Welcome to the airplane web page!</h1>'
-
 class PlaneCompany(db.Model, SerializerMixin):
     __tablename__ = 'plane_company'
     id = db.Column(db.Integer, primary_key = True)
@@ -50,6 +46,13 @@ class PlanesOwners(db.Model, SerializerMixin):
     
     planes = db.relationship('Planes', back_populates = 'owners')
     owners = db.relationship('Owners', back_populates = 'planes')
+
+@app.route('/')
+def home():
+    return '<h1>Welcome to the airplane web page!</h1>'
+
+class 
+
 
 
 
