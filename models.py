@@ -33,5 +33,5 @@ class PlanesOwners(db.Model, SerializerMixin):
     planes_id = db.Column(db.Integer, db.ForeignKey('planes.id'), nullable = False)
     owners_id = db.Column(db.Integer, db.ForeignKey('owners.id'), nullable = False)
     
-    planes = db.relationship('Planes', back_populates = 'owners')
-    owners = db.relationship('Owners', back_populates = 'planes')
+    plane = db.relationship('Planes', back_populates = 'owners')
+    owner = db.relationship('Owners', back_populates = 'planes')
