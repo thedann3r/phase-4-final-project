@@ -17,17 +17,17 @@ class Planes(db.Model, SerializerMixin):
     planeCompany_id = db.Column(db.Integer, db.ForeignKey('plane_company.id'), nullable = False)
 
     plane_company = db.relationship('PlaneCompany', back_populates = 'planes')
-    owners = db.relationship('Owners', back_populates = 'planes')
+    owners = db.relationship('Owners', secondary = 'planes_owners', back_populates = 'planes')
 
 class Owners(db.Model, SerializerMixin):
     __tablename__ = 'owners'
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String, nullable = False, unique = True)
 
-    planes = db.relationship('Planes', back_populates = 'owners')
+    planes = db.relationship('Planes',secondary = 'planes_owners', back_populates = 'owners')
 
 class PlanesOwners(db.Model, SerializerMixin):
-    __tablename__ = 'planesowners'
+    __tablename__ = 'planes_owners'
     id = db.Column(db.Integer, primary_key = True)
     
     planes_id = db.Column(db.Integer, db.ForeignKey('planes.id'), nullable = False)
