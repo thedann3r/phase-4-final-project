@@ -18,8 +18,8 @@ api = Api(app)
 def home():
     return '<h1>Welcome to the airplane web page!</h1>'
     
-api.add_resource(CompanyList, '/company')
-api.add_resource(Company, '/company/<int:id>')
+api.add_resource(Company, '/company')
+api.add_resource(CompanyList, '/company/<int:id>')
 
 api.add_resource(Airplanes, '/planes')
 api.add_resource(AirplaneList, '/planes/<int:id>')

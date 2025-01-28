@@ -10,7 +10,7 @@ class Company(Resource):
     # def post(self):
     #     data = request.get_json()
     #     if not data or not all(key in data for key in ('name', 'founded')):
-    #         return {'error' : 'missing required fields!'}, 422
+    #         return {'error' : 'You are missing required fields!'}, 422
     #     new_company = PlaneCompany(**data)
     #     db.session.add(new_company)
     #     db.session.commit()
@@ -18,10 +18,10 @@ class Company(Resource):
     
 class CompanyList(Resource):
     def get(self, id):
-        company = PlaneCompany.filter_by(id=id).first()
+        company = PlaneCompany.query.filter_by(id=id).first()
 
         if not company:
-            return {'error' : 'Company was not found!'}, 404
+            return {'error' : 'The company could not be found!'}, 404
         return company.to_dict(), 200
 
 class Airplanes(Resource):
@@ -31,9 +31,12 @@ class Airplanes(Resource):
     
     def post(self):
         data = request.get_json()
-        if not data or not all(key in data for key in ('name')):
-            return {'error' : 'missing required fields!'}, 422
-        new_plane = PlaneCompany(**data)
+        if not data or not all(key in data for key in ('name', 'planeCompany_id')):
+            return {'error' : 'You are missing required fields!'}, 422
+        new_plane = PlaneCompany(
+            name = data['name']
+            planeCompany_id = data['planeCompany_id']
+        )
         db.session.add(new_plane)
         db.session.commit()
         return new_plane.to_dict(), 201
