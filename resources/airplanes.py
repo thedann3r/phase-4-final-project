@@ -7,14 +7,14 @@ class Company(Resource):
         companies = PlaneCompany.query.all()
         return [company.to_dict() for company in companies]
     
-    def post(self):
-        data = request.get_json()
-        if not data or not all(key in data for key in ('name', 'founded')):
-            return {'error' : 'missing required fields!'}, 422
-        new_company = PlaneCompany(**data)
-        db.session.add(new_company)
-        db.session.commit()
-        return new_company.to_dict(), 201
+    # def post(self):
+    #     data = request.get_json()
+    #     if not data or not all(key in data for key in ('name', 'founded')):
+    #         return {'error' : 'missing required fields!'}, 422
+    #     new_company = PlaneCompany(**data)
+    #     db.session.add(new_company)
+    #     db.session.commit()
+    #     return new_company.to_dict(), 201
     
 class CompanyList(Resource):
     def get(self, id):
@@ -23,27 +23,43 @@ class CompanyList(Resource):
         if not company:
             return {'error' : 'Company was not found!'}, 404
         return company.to_dict(), 200
-    
-    # def patch(self, id):
-    #     data = request.get_json()
-    #     company = PlaneCompany.filter_by(id=id).first()
-    #     if not company:
-    #         return {'error' : 'Company not found!'}, 404
-    #     if 'name' in data:
-    #         company.name = data['name']
-    #     if 'founded' in data:
-    #         company.founded = data['founded']
-    #     db.session.commt()
-    #     return company.to_dict(), 200
-    # def delete(self, id):
-    #     company = PlaneCompany.query.get(id)
-    #     if not company:
-    #         return {'error' : 'Company not found!'}, 404
-    #     db.session.delete(company)
-    #     db.session.commit()
-    #     return {'message' : 'company deleted successfully!'}, 200
 
 class Airplanes(Resource):
     def get(self):
         planes = Planes.query.all()
         return [plane.to_dict() for plane in planes]
+    
+    def post(self):
+        data = request.get_json()
+        if not data or not all(key in data for key in ('name')):
+            return {'error' : 'missing required fields!'}, 422
+        new_plane = PlaneCompany(**data)
+        db.session.add(new_plane)
+        db.session.commit()
+        return new_plane.to_dict(), 201
+    
+class AirplaneList(Resource):
+    def get(self, id):
+        plane = Planes.filter_by(id=id).first()
+
+        if not plane:
+            return {'error' : 'The airplane could not be found!'}, 404
+        return plane.to_dict(), 200
+    
+    def patch(self, id):
+        data = request.get_json()
+        plane = Planes.filter_by(id=id).first()
+        if not plane:
+            return {'error' : 'The airplane could not be found!'}, 404
+        if 'name' in data:
+            plane.name = data['name']
+        db.session.commt()
+        return plane.to_dict(), 200
+    
+    def delete(self, id):
+        plane = Planes.query.get(id)
+        if not plane:
+            return {'error' : 'The airplane could not be found!'}, 404
+        db.session.delete(plane)
+        db.session.commit()
+        return {'message' : 'Airplane deleted successfully!'}, 200
