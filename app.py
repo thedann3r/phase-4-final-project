@@ -51,10 +51,19 @@ class PlanesOwners(db.Model, SerializerMixin):
 def home():
     return '<h1>Welcome to the airplane web page!</h1>'
 
-class 
-
-
-
+class PlaneCompanyResource(Resource):
+    def get(self):
+        companies = PlaneCompany.query.all()
+        return [company.to_dict() for company in companies]
+    
+    def post(self):
+        data = request.get_json()
+        if not data or not all(key in data for key in ('name', 'founded')):
+            return {'error' : 'missing required fields!'}, 422
+        new_company = PlaneCompany(**data)
+        db.session.add(new_company)
+        db.session.commit()
+        return new_company.to_dict(), 201
 
 if __name__ == '__main__':
     app.run(debug=True)
