@@ -10,7 +10,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///airplanes.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
-migrate = Migrate(app,db)
+migrate = Migrate(app, db)
 CORS(app, supports_credentials=True)
 api = Api(app)
 
@@ -18,7 +18,7 @@ api = Api(app)
 def home():
     return '<h1>Welcome to the airplane web page!</h1>'
     
-api.add_resource(CompanyList, '/company')
+api.add_resource(CompanyList, '/companies')
 api.add_resource(Company, '/company/<int:id>')
 
 api.add_resource(Airplanes, '/planes')

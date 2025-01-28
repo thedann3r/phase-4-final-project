@@ -40,7 +40,7 @@ class Airplanes(Resource):
     
 class AirplaneList(Resource):
     def get(self, id):
-        plane = Planes.filter_by(id=id).first()
+        plane = Planes.query.filter_by(id=id).first()
 
         if not plane:
             return {'error' : 'The airplane could not be found!'}, 404
@@ -48,12 +48,12 @@ class AirplaneList(Resource):
     
     def patch(self, id):
         data = request.get_json()
-        plane = Planes.filter_by(id=id).first()
+        plane = Planes.query.filter_by(id=id).first()
         if not plane:
             return {'error' : 'The airplane could not be found!'}, 404
         if 'name' in data:
             plane.name = data['name']
-        db.session.commt()
+        db.session.commit()
         return plane.to_dict(), 200
     
     def delete(self, id):
