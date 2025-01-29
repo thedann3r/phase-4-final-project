@@ -76,8 +76,8 @@ class TheOwner(Resource):
     
     def post(self):
         data = request.get_json()
-        if not data or not all(key in data for key in ('name')):
-            return {'error' : 'You are missing required fields!'}, 422
+        if not data or 'name' not in data:
+            return {'error': 'You are missing the required field: name!'}, 422
         new_owner = Owners(
             name = data['name']
         )
