@@ -3,7 +3,7 @@ from flask_migrate import Migrate
 from flask_restful import Api
 from models import db
 from flask_cors import CORS
-from resources.airplanes import CompanyList,Company,Airplane,AirplaneList,TheOwner,TheOwnerList,PlanesOwners,PlaneOwnerList
+from resources.airplanes import CompanyList,Company,Airplane,AirplaneList,TheOwner,TheOwnerList,PlaneOwner,PlaneOwnerList
 
 app =Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///airplanes.db'
@@ -27,7 +27,7 @@ api.add_resource(AirplaneList, '/planes/<int:id>')
 api.add_resource(TheOwner, '/owners')
 api.add_resource(TheOwnerList, '/owners/<int:id>')
 
-api.add_resource(PlanesOwners, '/planeowners')
+api.add_resource(PlaneOwner, '/planeowners')
 api.add_resource(PlaneOwnerList, '/planeowners/<int:id>')
 
 if __name__ == '__main__':

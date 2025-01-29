@@ -91,7 +91,7 @@ class TheOwnerList(Resource):
             return {'error' : 'The airplane could not be found!'}, 404
         return owner.to_dict(), 200
     
-class planeOwner(Resource):
+class PlaneOwner(Resource):
     def get(self):
         planeOwners = PlanesOwners.query.all()
         return [planeOwner.to_dict() for planeOwner in planeOwners]
