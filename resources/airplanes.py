@@ -90,4 +90,28 @@ class TheOwnerList(Resource):
         if not owner:
             return {'error' : 'The airplane could not be found!'}, 404
         return owner.to_dict(), 200
+    
+class planeOwner(Resource):
+    def get(self):
+        planeOwners = PlanesOwners.query.all()
+        return [planeOwner.to_dict() for planeOwner in planeOwners]
+    
+    def post(self):
+        data = request.get_json()
+        if not data or not all(key in data for key in ('planes_id', 'owners_id')):
+            return {'error' : 'You are missing required fields!'}, 422
+        new_owner = PlanesOwners(
+            planes_id = data['planes_id'],
+            owners_id = data['owners_id']
+        )
+        db.session.add(new_owner)
+        db.session.commit()
+        return new_owner.to_dict(), 201
+    
+class PlaneOwnerList(Resource):
+    def get(self,id):
+        planeOwner = PlanesOwners.query.filter_by(id=id).first()
 
+        if not planeOwner:
+            return {'error' : 'The airplane and its owners could not be found!'}, 404
+        return planeOwner.to_dict(), 200
