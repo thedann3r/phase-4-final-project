@@ -56,6 +56,8 @@ class AirplaneList(Resource):
             return {'error' : 'The airplane could not be found!'}, 404
         if 'name' in data:
             plane.name = data['name']
+        if 'planeCompany_id' in data:
+            plane.planeCompany_id = data['planeCompany_id']
         db.session.commit()
         return plane.to_dict(), 200
     
