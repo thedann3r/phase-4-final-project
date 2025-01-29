@@ -33,8 +33,8 @@ class Airplanes(Resource):
         data = request.get_json()
         if not data or not all(key in data for key in ('name', 'planeCompany_id')):
             return {'error' : 'You are missing required fields!'}, 422
-        new_plane = PlaneCompany(
-            name = data['name']
+        new_plane = Planes(
+            name = data['name'],
             planeCompany_id = data['planeCompany_id']
         )
         db.session.add(new_plane)
