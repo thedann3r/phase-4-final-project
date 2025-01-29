@@ -24,7 +24,7 @@ class CompanyList(Resource):
             return {'error' : 'The company could not be found!'}, 404
         return company.to_dict(), 200
 
-class Airplanes(Resource):
+class Airplane(Resource):
     def get(self):
         planes = Planes.query.all()
         return [plane.to_dict() for plane in planes]
@@ -66,3 +66,28 @@ class AirplaneList(Resource):
         db.session.delete(plane)
         db.session.commit()
         return {'message' : 'Airplane deleted successfully!'}, 200
+    
+class TheOwner(Resource):
+    def get(self):
+        owners = Owners.query.all()
+        return [owner.to_dict() for owner in owners]
+    
+    def post(self):
+        data = request.get_json()
+        if not data or not all(key in data for key in ('name')):
+            return {'error' : 'You are missing required fields!'}, 422
+        new_owner = Owners(
+            name = data['name']
+        )
+        db.session.add(new_owner)
+        db.session.commit()
+        return new_owner.to_dict(), 201
+    
+class TheOwnerList(Resource):
+    def get(self, id):
+        owner = Owners.query.filter_by(id=id).first()
+
+        if not owner:
+            return {'error' : 'The airplane could not be found!'}, 404
+        return owner.to_dict(), 200
+
