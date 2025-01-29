@@ -8,6 +8,7 @@ class PlaneCompany(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False, unique=True)
     founded = db.Column(db.String, nullable=False)
+
     planes = db.relationship('Planes', back_populates='plane_company')
 
     serialize_rules = ('-planes',)
@@ -15,20 +16,26 @@ class PlaneCompany(db.Model, SerializerMixin):
 class Planes(db.Model, SerializerMixin):
     __tablename__ = 'planes'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False, unique=True)
+    name = db.Column(db.String, nullable=False)
     planeCompany_id = db.Column(db.Integer, db.ForeignKey('plane_company.id'), nullable=False)
 
     plane_company = db.relationship('PlaneCompany', back_populates='planes')
     owners = db.relationship('Owners', secondary='planes_owners', back_populates='planes')
 
-    serialize_rules = ('-planes_owners.planes',)
+    serialize_rules = ('-planes_owners.planes', '-plane_company.planes',)
 
 class Owners(db.Model, SerializerMixin):
     __tablename__ = 'owners'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False, unique=True)
+    name = db.Column(db.String, nullable=False)
 
     planes = db.relationship('Planes', secondary='planes_owners', back_populates='owners')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }
     
     serialize_rules = ('-planes_owners.owners',)
 
@@ -43,4 +50,4 @@ class PlanesOwners(db.Model, SerializerMixin):
     owner = db.relationship('Owners')
 
 
-    serialize_rules = ('-planes.planes_owners', '-owners.planes_owners',)
+    serialize_rules = ('-plane.planes_owners', '-owner.planes_owners',)
