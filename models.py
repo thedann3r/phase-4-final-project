@@ -16,13 +16,13 @@ class PlaneCompany(db.Model, SerializerMixin):
 class Planes(db.Model, SerializerMixin):
     __tablename__ = 'planes'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, nullable=False, unique = True)
     planeCompany_id = db.Column(db.Integer, db.ForeignKey('plane_company.id'), nullable=False)
 
     plane_company = db.relationship('PlaneCompany', back_populates='planes')
     owners = db.relationship('Owners', secondary='planes_owners', back_populates='planes')
 
-    serialize_rules = ('-planes_owners.planes', '-plane_company.planes',)
+    serialize_rules = ('-planes_owners.planes', '-plane_company.planes','-owners',)
 
 class Owners(db.Model, SerializerMixin):
     __tablename__ = 'owners'
@@ -30,12 +30,6 @@ class Owners(db.Model, SerializerMixin):
     name = db.Column(db.String, nullable=False)
 
     planes = db.relationship('Planes', secondary='planes_owners', back_populates='owners')
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name
-        }
     
     serialize_rules = ('-planes_owners.owners',)
 
@@ -48,6 +42,5 @@ class PlanesOwners(db.Model, SerializerMixin):
     
     plane = db.relationship('Planes')
     owner = db.relationship('Owners')
-
 
     serialize_rules = ('-plane.planes_owners', '-owner.planes_owners',)

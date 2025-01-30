@@ -7,14 +7,14 @@ class Company(Resource):
         companies = PlaneCompany.query.all()
         return [company.to_dict() for company in companies]
     
-    # def post(self):
-    #     data = request.get_json()
-    #     if not data or not all(key in data for key in ('name', 'founded')):
-    #         return {'error' : 'You are missing required fields!'}, 422
-    #     new_company = PlaneCompany(**data)
-    #     db.session.add(new_company)
-    #     db.session.commit()
-    #     return new_company.to_dict(), 201
+    def post(self):
+        data = request.get_json()
+        if not data or not all(key in data for key in ('name', 'founded')):
+            return {'error' : 'You are missing required fields!'}, 422
+        new_company = PlaneCompany(**data)
+        db.session.add(new_company)
+        db.session.commit()
+        return new_company.to_dict(), 201
     
 class CompanyList(Resource):
     def get(self, id):
@@ -23,6 +23,26 @@ class CompanyList(Resource):
         if not company:
             return {'error' : 'The company could not be found!'}, 404
         return company.to_dict(), 200
+    
+    def patch(self, id):
+        data = request.get_json()
+        plane = PlaneCompany.query.filter_by(id=id).first()
+        if not plane:
+            return {'error' : 'The airplane could not be found!'}, 404
+        if 'name' in data:
+            plane.name = data['name']
+        if 'founded' in data:
+            plane.founded = data['founded']
+        db.session.commit()
+        return plane.to_dict(), 200
+    
+    def delete(self, id):
+        plane = PlaneCompany.query.get(id)
+        if not plane:
+            return {'error' : 'The airplane could not be found!'}, 404
+        db.session.delete(plane)
+        db.session.commit()
+        return {'message' : 'Airplane deleted successfully!'}, 200
 
 class Airplane(Resource):
     def get(self):
@@ -93,6 +113,24 @@ class TheOwnerList(Resource):
             return {'error' : 'The airplane could not be found!'}, 404
         return owner.to_dict(), 200
     
+    def patch(self, id):
+        data = request.get_json()
+        owner = Owners.query.filter_by(id=id).first()
+        if not owner:
+            return {'error' : 'The owner could not be found!'}, 404
+        if 'name' in data:
+            owner.name = data['name']
+        db.session.commit()
+        return owner.to_dict(), 200
+    
+    def delete(self, id):
+        plane = Owners.query.get(id)
+        if not plane:
+            return {'error' : 'The owner could not be found!'}, 404
+        db.session.delete(plane)
+        db.session.commit()
+        return {'message' : 'Owner deleted successfully!'}, 200
+    
 class PlaneOwner(Resource):
     def get(self):
         planeOwners = PlanesOwners.query.all()
@@ -117,3 +155,23 @@ class PlaneOwnerList(Resource):
         if not planeOwner:
             return {'error' : 'The airplane and its owners could not be found!'}, 404
         return planeOwner.to_dict(), 200
+    
+    def patch(self, id):
+        data = request.get_json()
+        plane = PlanesOwners.query.filter_by(id=id).first()
+        if not plane:
+            return {'error' : 'The airplane or its owner could not be found!'}, 404
+        if 'planes_id' in data:
+            plane.planes_id = data['planes_id']
+        if 'owners_id' in data:
+            plane.owners_id = data['owners_id']
+        db.session.commit()
+        return plane.to_dict(), 200
+    
+    def delete(self, id):
+        plane = PlanesOwners.query.get(id)
+        if not plane:
+            return {'error' : 'The owner could not be found!'}, 404
+        db.session.delete(plane)
+        db.session.commit()
+        return {'message' : 'Owner deleted successfully!'}, 200
